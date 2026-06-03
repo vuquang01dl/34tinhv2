@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bản đồ 34 tỉnh thành Việt Nam</title>
+    <base href="./">
+    <script src="./script.js" defer></script>
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-2: #38bdf8;
+            --green: #10b981;
+            --orange: #f59e0b;
+            --red: #ef4444;
+            --text: #17324d;
+            --muted: #64748b;
+            --card: rgba(255,255,255,0.94);
+            --line: rgba(148,163,184,0.28);
+            --shadow: 0 18px 45px rgba(30, 64, 175, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 8% 12%, rgba(37,99,235,0.16), transparent 24%),
+                radial-gradient(circle at 90% 18%, rgba(16,185,129,0.14), transparent 24%),
+                linear-gradient(135deg, #eef6ff 0%, #f8fbff 45%, #eef9f4 100%);
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            filter: blur(30px);
+            pointer-events: none;
+            opacity: 0.34;
+            z-index: 0;
+        }
+
+        body::before {
+            left: -120px;
+            bottom: 80px;
+            background: #93c5fd;
+        }
+
+        body::after {
+            right: -130px;
+            top: 160px;
+            background: #86efac;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: min(1940px, 100%);
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        .top-banner {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            min-height: 96px;
+            padding: 18px 24px;
+            margin-bottom: 12px;
+            border-radius: 28px;
+            color: white;
+            background: linear-gradient(135deg, #1d4ed8 0%, #0891b2 55%, #10b981 100%);
+            box-shadow: var(--shadow);
+        }
+
+        .top-banner::after {
+            content: "VIỆT NAM";
+            position: absolute;
+            right: 22px;
+            bottom: -12px;
+            font-size: 64px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.10);
+            white-space: nowrap;
+        }
+
+        .top-banner h1 {
+            position: relative;
+            z-index: 1;
+            margin: 0 0 8px;
+            font-size: clamp(25px, 2.2vw, 38px);
+            line-height: 1.15;
+        }
+
+        .top-banner p {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            max-width: 860px;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.55;
+            font-size: 15px;
+        }
+
+        .banner-tags {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .banner-tags span {
+            padding: 8px 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.17);
+            border: 1px solid rgba(255,255,255,0.22);
+            font-weight: 700;
+            white-space: nowrap;
+            backdrop-filter: blur(6px);
+        }
+
+        .qr-header-box {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 22px;
+            background: rgba(255,255,255,0.20);
+            border: 1px solid rgba(255,255,255,0.34);
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+            backdrop-filter: blur(8px);
+            flex: 0 0 auto;
+        }
+
+        .qr-header-box img {
+            width: 145px;
+            height: 145px;
+            object-fit: contain;
+            display: block;
+            border-radius: 16px;
+            background: #ffffff;
+            padding: 6px;
+        }
+
+        .qr-header-text {
+            max-width: 160px;
+            color: rgba(255,255,255,0.96);
+            line-height: 1.25;
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .qr-header-text small {
+            display: block;
+            margin-top: 5px;
+            color: rgba(255,255,255,0.80);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(230px, 280px) minmax(720px, 1fr) minmax(260px, 320px);
+            gap: 14px;
+            align-items: start;
+        }
+
+        .side-panel,
+        .map-panel,
+        .info-panel {
+            border: 1px solid rgba(255,255,255,0.65);
+            background: var(--card);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        .side-panel,
+        .info-panel {
+            padding: 12px;
+        }
+
+        .card {
+            padding: 12px;
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,251,255,0.92));
+            border: 1px solid var(--line);
+            margin-bottom: 12px;
+        }
+
+        .card:last-child {
+            margin-bottom: 0;
+        }
+
+        .card h2,
+        .card h3 {
+            margin: 0 0 10px;
+        }
+
+        .card h2 {
+            font-size: 19px;
+            line-height: 1.25;
+        }
+
+        .card h3 {
+            font-size: 16px;
+        }
+
+        .muted {
+            color: var(--muted);
+            line-height: 1.55;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat {
+            padding: 12px;
+            border-radius: 16px;
+            background: #ffffff;
+            border: 1px solid var(--line);
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 24px;
+            color: var(--blue);
+            margin-bottom: 3px;
+        }
+
+        .stat span {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .steps,
+        .merge-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .steps li,
+        .merge-list li {
+            display: flex;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(148,163,184,0.35);
+        }
+
+        .steps li:last-child,
+        .merge-list li:last-child {
+            border-bottom: 0;
+        }
+
+        .icon-dot {
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(37,99,235,0.10);
+            color: var(--blue);
+            font-weight: 800;
+        }
+
+        .merge-list strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .merge-list span {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .map-panel {
+            padding: 12px;
+        }
+
+        .map-heading {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 6px 4px 14px;
+        }
+
+        .map-heading h2 {
+            margin: 0 0 6px;
+            font-size: clamp(22px, 2vw, 30px);
+        }
+
+        .map-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .map-chips {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 999px;
+            padding: 9px 11px;
+            background: #fff;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .map-frame {
+            border-radius: 24px;
+            border: 1px solid var(--line);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.98), rgba(241,247,255,0.96)),
+                radial-gradient(circle at center, rgba(37,99,235,0.08), transparent 45%);
+            padding: 12px;
+            overflow: hidden;
+        }
+
+        .map-decoration-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            background: linear-gradient(90deg, rgba(37,99,235,0.08), rgba(16,185,129,0.08));
+            border: 1px dashed rgba(37,99,235,0.2);
+        }
+
+        .map-decoration-bar strong {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .mini-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .mini-tags span {
+            padding: 7px 9px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.82);
+            border: 1px solid var(--line);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .map-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            min-height: calc(100vh - 198px);
+            overflow: auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .map-container img {
+            display: block;
+            width: auto;
+            max-width: min(96vw, 760px);
+            max-height: 92vh;
+            height: auto;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 14px 26px rgba(15, 23, 42, 0.12));
+        }
+
+        #mapCanvas {
+            position: absolute;
+            display: block !important;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .now-playing {
+            color: white;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .now-playing::after {
+            content: "♪";
+            position: absolute;
+            right: 14px;
+            top: -6px;
+            font-size: 88px;
+            opacity: 0.14;
+            font-weight: 900;
+        }
+
+        .playing-label {
+            font-size: 12px;
+            opacity: 0.88;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        #playingProvinceName {
+            margin-top: 8px;
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        #playingStatusText {
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 1.45;
+            opacity: 0.92;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .detail-box {
+            padding: 12px;
+            border-radius: 15px;
+            background: #fff;
+            border: 1px solid var(--line);
+        }
+
+        .detail-box.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .audio-buttons button {
+            border: 0;
+            border-radius: 12px;
+            padding: 9px 13px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+
+        #stopBtn {
+            color: white;
+            background: var(--blue);
+        }
+
+        #testBtn {
+            color: var(--text);
+            background: #eaf2ff;
+            border: 1px solid var(--line);
+        }
+
+        .province-list {
+            max-height: 620px;
+            overflow: auto;
+            display: grid;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .province-btn {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 32px 1fr;
+            gap: 10px;
+            align-items: center;
+            border: 1px solid var(--line);
+            border-radius: 15px;
+            background: #fff;
+            padding: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .province-btn:hover,
+        .province-btn.active {
+            transform: translateY(-1px);
+            border-color: rgba(37,99,235,0.45);
+            box-shadow: 0 10px 18px rgba(37,99,235,0.1);
+            background: #f7fbff;
+        }
+
+        .province-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: rgba(37,99,235,0.1);
+            color: var(--blue);
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .province-btn strong {
+            display: block;
+            font-size: 13.5px;
+            color: var(--text);
+            margin-bottom: 3px;
+        }
+
+        .province-btn span {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        area {
+            cursor: pointer;
+            outline: none;
+        }
+
+
+        .side-panel,
+        .info-panel {
+            position: sticky;
+            top: 14px;
+            max-height: calc(100vh - 28px);
+            overflow: auto;
+        }
+
+        .side-panel::-webkit-scrollbar,
+        .info-panel::-webkit-scrollbar,
+        .province-list::-webkit-scrollbar,
+        .map-container::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        .side-panel::-webkit-scrollbar-thumb,
+        .info-panel::-webkit-scrollbar-thumb,
+        .province-list::-webkit-scrollbar-thumb,
+        .map-container::-webkit-scrollbar-thumb {
+            background: rgba(37, 99, 235, 0.22);
+            border-radius: 999px;
+        }
+
+        .card {
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.045);
+        }
+
+        .card h2,
+        .card h3 {
+            letter-spacing: -0.02em;
+        }
+
+        .map-panel {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.96), rgba(247,251,255,0.94));
+        }
+
+        .map-frame {
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.74);
+        }
+
+        .map-container {
+            background:
+                radial-gradient(circle at 50% 44%, rgba(37,99,235,0.07), transparent 38%),
+                linear-gradient(180deg, rgba(255,255,255,0.38), rgba(255,255,255,0));
+            border-radius: 22px;
+        }
+
+        .info-panel .card,
+        .side-panel .card {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.96));
+        }
+
+        .province-btn {
+            min-height: 58px;
+        }
+
+        .map-heading {
+            padding-bottom: 10px;
+        }
+
+        .map-heading h2 {
+            color: #0f2f63;
+        }
+
+        .top-banner {
+            border: 1px solid rgba(255,255,255,0.22);
+        }
+
+        .top-banner h1 {
+            letter-spacing: -0.03em;
+        }
+
+        @media (min-width: 1500px) {
+            .map-container img {
+                max-width: min(58vw, 840px);
+            }
+        }
+
+        @media (min-width: 1780px) {
+            .map-container img {
+                max-width: min(60vw, 900px);
+            }
+        }
+
+        @media (max-width: 1280px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel,
+            .info-panel {
+                position: static;
+                max-height: none;
+            }
+
+            .map-container {
+                min-height: 760px;
+            }
+
+            .map-container img {
+                max-width: min(94vw, 760px);
+                max-height: 92vh;
+            }
+
+            .province-list {
+                max-height: 360px;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .container {
+                padding: 12px;
+            }
+
+            .top-banner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .banner-tags {
+                justify-content: flex-start;
+            }
+
+
+            .qr-header-box {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .qr-header-box img {
+                width: 125px;
+                height: 125px;
+            }
+
+            .map-heading,
+            .map-decoration-bar {
+                flex-direction: column;
+            }
+
+            .map-chips,
+            .mini-tags {
+                justify-content: flex-start;
+            }
+
+            .detail-grid,
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container img {
+                max-width: min(94vw, 500px);
+            }
+        }
+
+        /* ===== Nâng cấp giao diện chuyên nghiệp, ưu tiên bản đồ lớn ===== */
+        .container {
+            width: min(2060px, 100%);
+            padding: 12px 14px;
+        }
+
+        .top-banner {
+            min-height: 84px;
+            padding: 15px 22px;
+            margin-bottom: 12px;
+            border-radius: 24px;
+        }
+
+        .top-banner h1 {
+            font-size: clamp(25px, 2vw, 34px);
+            margin-bottom: 5px;
+        }
+
+        .top-banner p {
+            font-size: 14px;
+            max-width: 980px;
+        }
+
+        .banner-tags span {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .layout {
+            grid-template-columns: minmax(218px, 258px) minmax(820px, 1fr) minmax(245px, 292px);
+            gap: 12px;
+        }
+
+        .side-panel,
+        .info-panel,
+        .map-panel {
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.24);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,251,255,0.92));
+            box-shadow:
+                0 18px 42px rgba(15, 23, 42, 0.08),
+                inset 0 1px 0 rgba(255,255,255,0.75);
+        }
+
+        .side-panel,
+        .info-panel {
+            padding: 12px;
+            position: sticky;
+            top: 12px;
+            max-height: calc(100vh - 24px);
+            overflow: auto;
+        }
+
+        .card {
+            padding: 13px;
+            margin-bottom: 10px;
+            border-radius: 18px;
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.98), rgba(245,249,255,0.96));
+            box-shadow: 0 10px 22px rgba(15,23,42,0.045);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            letter-spacing: -0.02em;
+        }
+
+        .card h3 {
+            font-size: 15.5px;
+            letter-spacing: -0.01em;
+        }
+
+        .muted {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .stats {
+            gap: 8px;
+        }
+
+        .stat {
+            padding: 11px;
+            border-radius: 14px;
+        }
+
+        .stat strong {
+            font-size: 23px;
+        }
+
+        .stat span {
+            font-size: 12px;
+        }
+
+        .steps li,
+        .merge-list li {
+            padding: 8px 0;
+            gap: 9px;
+        }
+
+        .icon-dot {
+            width: 27px;
+            height: 27px;
+            min-width: 27px;
+            font-size: 12px;
+            background: linear-gradient(135deg, rgba(37,99,235,0.12), rgba(14,165,233,0.10));
+        }
+
+        .merge-list strong {
+            font-size: 13px;
+        }
+
+        .merge-list span {
+            font-size: 12px;
+        }
+
+        .map-panel {
+            padding: 12px;
+        }
+
+        .map-heading {
+            align-items: center;
+            padding: 3px 4px 10px;
+        }
+
+        .section-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 5px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(37,99,235,0.09);
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+        }
+
+        .section-kicker::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 4px rgba(34,197,94,0.12);
+        }
+
+        .map-title-block h2 {
+            margin-bottom: 3px;
+            font-size: clamp(28px, 2.25vw, 42px);
+            color: #102a56;
+        }
+
+        .map-title-block p {
+            font-size: 14px;
+            max-width: 920px;
+        }
+
+        .map-chips {
+            min-width: 190px;
+        }
+
+        .chip {
+            padding: 8px 11px;
+            font-size: 12.5px;
+            background: rgba(255,255,255,0.92);
+            box-shadow: 0 8px 18px rgba(15,23,42,0.04);
+        }
+
+        .selected-province-banner {
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 0 10px;
+            padding: 16px 18px;
+            border-radius: 22px;
+            color: #ffffff;
+            background:
+                radial-gradient(circle at 12% 40%, rgba(255,255,255,0.28), transparent 20%),
+                linear-gradient(135deg, #1d4ed8 0%, #0f766e 100%);
+            box-shadow: 0 18px 34px rgba(37, 99, 235, 0.18);
+            border: 1px solid rgba(255,255,255,0.24);
+        }
+
+        .selected-province-banner::after {
+            content: "ĐANG PHÁT";
+            position: absolute;
+            right: 18px;
+            bottom: -8px;
+            font-size: 42px;
+            font-weight: 950;
+            color: rgba(255,255,255,0.09);
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+
+        .selected-label {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            opacity: 0.84;
+        }
+
+        .selected-name {
+            margin-top: 5px;
+            font-size: clamp(30px, 3vw, 56px);
+            line-height: 1;
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            text-shadow: 0 8px 20px rgba(0,0,0,0.16);
+        }
+
+        .selected-subtitle {
+            margin-top: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .selected-province-status {
+            position: relative;
+            z-index: 1;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.24);
+            font-weight: 850;
+            white-space: nowrap;
+            backdrop-filter: blur(8px);
+        }
+
+        .map-frame {
+            padding: 9px;
+            border-radius: 23px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.99), rgba(240,247,255,0.94));
+        }
+
+        .map-decoration-bar {
+            margin-bottom: 8px;
+            padding: 10px 12px;
+            border-radius: 17px;
+        }
+
+        .map-decoration-bar strong {
+            font-size: 14px;
+        }
+
+        .mini-tags span {
+            padding: 6px 9px;
+            font-size: 11.5px;
+        }
+
+        .map-container {
+            min-height: calc(100vh - 238px);
+            padding: 4px;
+            border-radius: 20px;
+            background:
+                radial-gradient(circle at 50% 42%, rgba(37,99,235,0.08), transparent 36%),
+                linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0));
+        }
+
+        .map-container img {
+            max-width: min(98vw, 920px);
+            max-height: 96vh;
+            filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.12));
+        }
+
+        #playingProvinceName {
+            font-size: 23px;
+        }
+
+        #playingStatusText {
+            font-size: 13px;
+        }
+
+        .detail-grid {
+            gap: 8px;
+        }
+
+        .detail-box {
+            padding: 10px;
+            border-radius: 13px;
+        }
+
+        .detail-label {
+            font-size: 10.5px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+        }
+
+        .audio-buttons button {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 11px;
+        }
+
+        .province-list {
+            max-height: 690px;
+            gap: 7px;
+        }
+
+        .province-btn {
+            min-height: 51px;
+            padding: 8px 9px;
+            border-radius: 14px;
+            grid-template-columns: 29px 1fr;
+        }
+
+        .province-number {
+            width: 29px;
+            height: 29px;
+            font-size: 11px;
+        }
+
+        .province-btn strong {
+            font-size: 13px;
+        }
+
+        .province-btn span {
+            font-size: 11.5px;
+        }
+
+        .now-playing {
+            background:
+                radial-gradient(circle at 86% 10%, rgba(255,255,255,0.20), transparent 24%),
+                linear-gradient(135deg, #0f3ea8, #0891b2 62%, #0f766e);
+        }
+
+        @media (min-width: 1500px) {
+            .map-container img {
+                max-width: min(64vw, 980px);
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .map-container img {
+                max-width: min(66vw, 1060px);
+            }
+
+            .layout {
+                grid-template-columns: minmax(220px, 270px) minmax(980px, 1fr) minmax(250px, 305px);
+            }
+        }
+
+        @media (min-width: 2100px) {
+            .map-container img {
+                max-width: min(68vw, 1160px);
+            }
+        }
+
+        @media (max-width: 1280px) {
+            .side-panel,
+            .info-panel {
+                position: static;
+                max-height: none;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                min-height: 780px;
+            }
+
+            .map-container img {
+                max-width: min(96vw, 900px);
+            }
+        }
+
+
+        /* ===== FIX THEO ẢNH: map rộng hơn, số không lệch, ô chữ không bị trắng ===== */
+
+        .container {
+            width: min(2180px, 100%);
+            padding: 10px 12px;
+        }
+
+        .layout {
+            grid-template-columns: minmax(205px, 238px) minmax(900px, 1fr) minmax(235px, 278px);
+            gap: 10px;
+        }
+
+        .top-banner {
+            margin-bottom: 10px;
+        }
+
+        .map-panel {
+            padding: 10px;
+        }
+
+        .selected-province-banner {
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            border-radius: 20px;
+        }
+
+        .selected-name {
+            font-size: clamp(34px, 3.35vw, 62px);
+        }
+
+        .map-frame {
+            padding: 6px;
+            overflow: hidden;
+        }
+
+        .map-decoration-bar {
+            margin-bottom: 6px;
+            padding: 10px 12px;
+        }
+
+        .map-container {
+            width: 100%;
+            min-height: calc(100vh - 215px);
+            padding: 0;
+            overflow: auto;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /*
+           Cho ảnh bản đồ chiếm gần hết chiều rộng panel.
+           Trước đó ảnh bị giới hạn max-width nên còn trống 2 bên.
+        */
+        .map-container img {
+            width: min(100%, 1250px);
+            max-width: none;
+            max-height: none;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @media (min-width: 1500px) {
+            .map-container img {
+                width: min(100%, 1360px);
+                max-width: none;
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .map-container img {
+                width: min(100%, 1500px);
+                max-width: none;
+            }
+
+            .layout {
+                grid-template-columns: minmax(210px, 248px) minmax(1080px, 1fr) minmax(238px, 286px);
+            }
+        }
+
+        /* Sửa ô chữ trên cùng bên phải đang bị trắng/chìm */
+        .info-panel .now-playing {
+            color: #ffffff !important;
+            background:
+                radial-gradient(circle at 88% 18%, rgba(255,255,255,0.18), transparent 26%),
+                linear-gradient(135deg, #0f3ea8 0%, #0e7490 55%, #047857 100%) !important;
+            border: 1px solid rgba(255,255,255,0.22);
+            box-shadow: 0 14px 32px rgba(15, 62, 168, 0.18);
+        }
+
+        .info-panel .now-playing * {
+            color: #ffffff !important;
+            opacity: 1;
+        }
+
+        .info-panel .now-playing::after {
+            color: rgba(255,255,255,0.13) !important;
+        }
+
+        #playingProvinceName {
+            color: #ffffff !important;
+            font-weight: 950;
+            text-shadow: 0 6px 16px rgba(0,0,0,0.18);
+        }
+
+        #playingStatusText {
+            color: rgba(255,255,255,0.92) !important;
+        }
+
+        /* Sửa số thứ tự trong danh sách bị lệch */
+        .province-btn {
+            grid-template-columns: 34px minmax(0, 1fr);
+            align-items: center;
+            min-height: 58px;
+            padding: 9px 10px;
+            column-gap: 10px;
+        }
+
+        .province-number {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            min-height: 34px;
+            display: inline-grid;
+            place-items: center;
+            line-height: 1;
+            border-radius: 50%;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .province-btn > span:last-child {
+            min-width: 0;
+            display: block;
+        }
+
+        .province-btn strong,
+        .province-btn span span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Hai cột hai bên gọn và chỉnh chu hơn */
+        .side-panel,
+        .info-panel {
+            padding: 10px;
+            border-radius: 22px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,248,255,0.94));
+        }
+
+        .card {
+            padding: 12px;
+            border-radius: 17px;
+            margin-bottom: 9px;
+        }
+
+        .card h2 {
+            font-size: 17px;
+            line-height: 1.25;
+        }
+
+        .card h3 {
+            font-size: 15px;
+        }
+
+        .muted {
+            font-size: 12.5px;
+        }
+
+        .stats {
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+        }
+
+        .stat {
+            padding: 10px;
+            border-radius: 13px;
+        }
+
+        .stat strong {
+            font-size: 22px;
+        }
+
+        .steps li,
+        .merge-list li {
+            padding: 7px 0;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .detail-box.full {
+            grid-column: auto;
+        }
+
+        .audio-buttons {
+            gap: 8px;
+        }
+
+        .province-list {
+            max-height: calc(100vh - 415px);
+            min-height: 300px;
+            padding-right: 4px;
+        }
+
+        /* Khi màn hình không đủ rộng thì chuyển 1 cột, tránh bị vỡ layout */
+        @media (max-width: 1420px) {
+            .layout {
+                grid-template-columns: minmax(210px, 250px) minmax(760px, 1fr) minmax(235px, 285px);
+            }
+
+            .map-container img {
+                width: min(100%, 1120px);
+            }
+        }
+
+        @media (max-width: 1220px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .side-panel,
+            .info-panel {
+                position: static;
+                max-height: none;
+            }
+
+            .map-container {
+                min-height: 780px;
+            }
+
+            .map-container img {
+                width: min(100%, 980px);
+            }
+
+            .province-list {
+                max-height: 380px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <section class="top-banner">
+            <div>
+                <h1>Bản đồ 34 tỉnh thành Việt Nam sau sáp nhập</h1>
+                <p>Click vào từng tỉnh để nghe âm thanh, tỉnh được chọn sẽ sáng lên. Hai bên giao diện được bổ sung thông tin sáp nhập, thống kê và danh sách tỉnh để không còn bị trống.</p>
+            </div>
+            <div class="qr-header-box">
+                <img src="./doc_QR/QR.JPG" alt="QR code" onerror="this.closest('.qr-header-box').style.display='none';">
+                <div class="qr-header-text">
+                    Quét mã QR
+                    <small>Ảnh QR đọc từ thư mục doc_QR/QR.JPG</small>
+                </div>
+            </div>
+            <div class="banner-tags">
+                <span>🔊 Có âm thanh</span>
+                <span>✨ Tỉnh sáng lên</span>
+                <span>🏛️ Thông tin sáp nhập</span>
+            </div>
+        </section>
+
+        <div class="layout">
+            <aside class="side-panel">
+                <div class="card">
+                    <h2>Khám phá bản đồ tương tác</h2>
+                    <p class="muted">Giao diện này giúp học nhanh 34 tỉnh/thành mới, vừa xem bản đồ vừa nghe âm thanh và tra cứu thông tin sau sáp nhập.</p>
+                </div>
+
+                <div class="card">
+                    <h3>Thống kê nhanh</h3>
+                    <div class="stats">
+                        <div class="stat"><strong>34</strong><span>Tỉnh / thành phố</span></div>
+                        <div class="stat"><strong>23</strong><span>Đơn vị sau sáp nhập</span></div>
+                        <div class="stat"><strong>11</strong><span>Đơn vị giữ nguyên</span></div>
+                        <div class="stat"><strong>32</strong><span>Tỉnh đã có audio</span></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Hướng dẫn</h3>
+                    <ul class="steps">
+                        <li><span class="icon-dot">1</span><div><b>Click vào tỉnh</b><div class="muted">Âm thanh phát và tỉnh sáng lên.</div></div></li>
+                        <li><span class="icon-dot">2</span><div><b>Xem thông tin bên phải</b><div class="muted">Tên tỉnh, nơi sáp nhập và trung tâm hành chính sẽ tự cập nhật.</div></div></li>
+                        <li><span class="icon-dot">3</span><div><b>Phát xong tự tắt sáng</b><div class="muted">Hiệu ứng sáng trở về bình thường khi âm thanh kết thúc.</div></div></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Sáp nhập nổi bật</h3>
+                    <ul class="merge-list">
+                        <li><span class="icon-dot">★</span><div><strong>Phú Thọ</strong><span>Phú Thọ + Vĩnh Phúc + Hòa Bình</span></div></li><li><span class="icon-dot">★</span><div><strong>Lâm Đồng</strong><span>Đắk Nông + Lâm Đồng + Bình Thuận</span></div></li><li><span class="icon-dot">★</span><div><strong>TP Hồ Chí Minh</strong><span>TP Hồ Chí Minh + Bình Dương + Bà Rịa - Vũng Tàu</span></div></li><li><span class="icon-dot">★</span><div><strong>TP Cần Thơ</strong><span>TP Cần Thơ + Hậu Giang + Sóc Trăng</span></div></li><li><span class="icon-dot">★</span><div><strong>Ninh Bình</strong><span>Hà Nam + Nam Định + Ninh Bình</span></div></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <main class="map-panel">
+                <div class="map-heading">
+                    <div class="map-title-block">
+                        <div class="section-kicker">BẢN ĐỒ TƯƠNG TÁC</div>
+                        <h2>Bản đồ Việt Nam</h2>
+                        <p>Bản đồ là nội dung chính, được phóng lớn hơn để dễ nhìn tỉnh/thành. Vùng sáng được vẽ bằng canvas phủ trên bản đồ nên không làm thay đổi ảnh gốc.</p>
+                    </div>
+                    <div class="map-chips">
+                        <span class="chip">📍 34 tỉnh/thành</span>
+                        <span class="chip">🖱️ Click để nghe</span>
+                        <span class="chip">🎧 Audio WAV</span>
+                    </div>
+                </div>
+
+                <div class="selected-province-banner" id="selectedProvinceBanner">
+                    <div class="selected-province-left">
+                        <div class="selected-label">Tỉnh / thành đang chọn</div>
+                        <div class="selected-name" id="selectedProvinceName">Chưa chọn tỉnh</div>
+                        <div class="selected-subtitle" id="selectedProvinceSubtitle">Click vào tỉnh trên bản đồ hoặc chọn ở danh sách bên phải.</div>
+                    </div>
+                    <div class="selected-province-status" id="selectedProvinceStatus">Sẵn sàng</div>
+                </div>
+
+                <div class="map-frame">
+                    <div class="map-decoration-bar">
+                        <div>
+                            <strong>Ghi chú bản đồ</strong>
+                            <div class="muted">Chọn trực tiếp trên bản đồ hoặc chọn nhanh trong danh sách bên phải.</div>
+                        </div>
+                        <div class="mini-tags">
+                            <span>Miền Bắc</span>
+                            <span>Miền Trung</span>
+                            <span>Tây Nguyên</span>
+                            <span>Miền Nam</span>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <img src="https://trantu1102.github.io/34tinh/Map VN.png" usemap="#image-map" alt="Vietnam Map">
+                        <canvas id="mapCanvas"></canvas>
+                        <map name="image-map" id="vietnam-map">
+                <area dataname="tuyenquang" shape="poly" coords="371,114,370,100,377,96,378,88,384,91,398,81,417,76,419,67,428,62,431,69,441,74,446,81,452,87,456,96,448,107,429,127,445,138,461,159,464,170,457,184,450,206,454,227,459,238,452,278,460,290,446,296,431,295,419,279,408,270,405,258,394,246,392,235,382,226,377,216,368,209,357,200,347,201,346,192,335,185,330,169,331,159,320,147,342,129,356,133" href="#" data-id="1" data-original-coords="371,114,370,100,377,96,378,88,384,91,398,81,417,76,419,67,428,62,431,69,441,74,446,81,452,87,456,96,448,107,429,127,445,138,461,159,464,170,457,184,450,206,454,227,459,238,452,278,460,290,446,296,431,295,419,279,408,270,405,258,394,246,392,235,382,226,377,216,368,209,357,200,347,201,346,192,335,185,330,169,331,159,320,147,342,129,356,133" data-coords="[371,114,370,100,377,96,378,88,384,91,398,81,417,76,419,67,428,62,431,69,441,74,446,81,452,87,456,96,448,107,429,127,445,138,461,159,464,170,457,184,450,206,454,227,459,238,452,278,460,290,446,296,431,295,419,279,408,270,405,258,394,246,392,235,382,226,377,216,368,209,357,200,347,201,346,192,335,185,330,169,331,159,320,147,342,129,356,133]">
+                <area dataname="laocai" shape="poly" coords="229,177,232,164,226,153,226,143,238,134,254,153,263,162,271,171,277,164,280,144,287,137,305,131,307,144,320,147,331,159,328,168,334,183,346,191,344,203,356,201,364,209,374,213,380,227,389,232,392,244,405,260,406,272,385,281,379,293,383,307,376,317,367,317,361,310,349,305,331,311,319,307,314,296,319,275,311,269,302,275,284,272,259,268,245,251,238,235,227,229,233,213,247,204,254,189,250,180,239,177" href="#" data-id="2" data-original-coords="229,177,232,164,226,153,226,143,238,134,254,153,263,162,271,171,277,164,280,144,287,137,305,131,307,144,320,147,331,159,328,168,334,183,346,191,344,203,356,201,364,209,374,213,380,227,389,232,392,244,405,260,406,272,385,281,379,293,383,307,376,317,367,317,361,310,349,305,331,311,319,307,314,296,319,275,311,269,302,275,284,272,259,268,245,251,238,235,227,229,233,213,247,204,254,189,250,180,239,177" data-coords="[229,177,232,164,226,153,226,143,238,134,254,153,263,162,271,171,277,164,280,144,287,137,305,131,307,144,320,147,331,159,328,168,334,183,346,191,344,203,356,201,364,209,374,213,380,227,389,232,392,244,405,260,406,272,385,281,379,293,383,307,376,317,367,317,361,310,349,305,331,311,319,307,314,296,319,275,311,269,302,275,284,272,259,268,245,251,238,235,227,229,233,213,247,204,254,189,250,180,239,177]">
+                <area dataname="thainguyen" shape="poly" coords="459,184,450,199,451,221,459,240,454,263,451,279,459,290,481,311,498,318,504,306,514,302,514,284,525,281,528,293,537,275,528,260,522,242,520,227,534,213,538,201,531,183,523,177,520,168,507,168,490,169,480,157,480,145,466,153,459,159" href="#" data-id="3" data-original-coords="459,184,450,199,451,221,459,240,454,263,451,279,459,290,481,311,498,318,504,306,514,302,514,284,525,281,528,293,537,275,528,260,522,242,520,227,534,213,538,201,531,183,523,177,520,168,507,168,490,169,480,157,480,145,466,153,459,159" data-coords="[459,184,450,199,451,221,459,240,454,263,451,279,459,290,481,311,498,318,504,306,514,302,514,284,525,281,528,293,537,275,528,260,522,242,520,227,534,213,538,201,531,183,523,177,520,168,507,168,490,169,480,157,480,145,466,153,459,159]">
+                <area dataname="phutho" shape="poly" coords="408,408,395,409,374,405,376,391,392,390,403,382,379,358,382,348,374,321,382,310,379,295,382,281,408,272,429,293,444,296,459,290,483,311,483,336,481,346,468,336,451,336,444,324,436,316,429,328,427,340,426,354,444,358,451,364,451,376,463,390,469,402,483,411,490,430,483,424,475,429,475,438,462,432,453,435,430,427" href="#" data-id="4" data-original-coords="408,408,395,409,374,405,376,391,392,390,403,382,379,358,382,348,374,321,382,310,379,295,382,281,408,272,429,293,444,296,459,290,483,311,483,336,481,346,468,336,451,336,444,324,436,316,429,328,427,340,426,354,444,358,451,364,451,376,463,390,469,402,483,411,490,430,483,424,475,429,475,438,462,432,453,435,430,427" data-coords="[408,408,395,409,374,405,376,391,392,390,403,382,379,358,382,348,374,321,382,310,379,295,382,281,408,272,429,293,444,296,459,290,483,311,483,336,481,346,468,336,451,336,444,324,436,316,429,328,427,340,426,354,444,358,451,364,451,376,463,390,469,402,483,411,490,430,483,424,475,429,475,438,462,432,453,435,430,427]">
+                <area dataname="bacninh" shape="poly" coords="508,359,523,359,541,361,544,352,544,341,549,332,564,329,571,334,579,334,592,334,602,335,614,335,621,329,626,319,629,310,623,301,608,287,597,292,588,284,577,284,568,292,562,304,552,305,544,301,531,293,525,280,514,283,517,298,504,308,499,317,504,328,501,337,505,349" href="#" data-id="5" data-original-coords="508,359,523,359,541,361,544,352,544,341,549,332,564,329,571,334,579,334,592,334,602,335,614,335,621,329,626,319,629,310,623,301,608,287,597,292,588,284,577,284,568,292,562,304,552,305,544,301,531,293,525,280,514,283,517,298,504,308,499,317,504,328,501,337,505,349" data-coords="[508,359,523,359,541,361,544,352,544,341,549,332,564,329,571,334,579,334,592,334,602,335,614,335,621,329,626,319,629,310,623,301,608,287,597,292,588,284,577,284,568,292,562,304,552,305,544,301,531,293,525,280,514,283,517,298,504,308,499,317,504,328,501,337,505,349]">
+                <area dataname="hungyen" shape="poly" coords="523,405,529,417,535,424,541,432,541,441,549,435,559,444,570,441,576,448,574,433,574,420,576,409,564,403,558,396,540,396,531,388,523,377,528,365,517,358,504,362,501,376,501,385,508,393,514,400" href="#" data-id="6" data-original-coords="523,405,529,417,535,424,541,432,541,441,549,435,559,444,570,441,576,448,574,433,574,420,576,409,564,403,558,396,540,396,531,388,523,377,528,365,517,358,504,362,501,376,501,385,508,393,514,400" data-coords="[523,405,529,417,535,424,541,432,541,441,549,435,559,444,570,441,576,448,574,433,574,420,576,409,564,403,558,396,540,396,531,388,523,377,528,365,517,358,504,362,501,376,501,385,508,393,514,400]">
+                <area dataname="haiphong" shape="poly" coords="537,395,529,388,522,379,528,370,526,359,538,361,546,355,544,343,550,334,561,331,574,335,558,346,571,353,580,356,594,367,591,383,598,391,583,394,591,401,583,404,570,401,558,392,547,394" href="#" data-id="7" data-original-coords="537,395,529,388,522,379,528,370,526,359,538,361,546,355,544,343,550,334,561,331,574,335,558,346,571,353,580,356,594,367,591,383,598,391,583,394,591,401,583,404,570,401,558,392,547,394" data-coords="[537,395,529,388,522,379,528,370,526,359,538,361,546,355,544,343,550,334,561,331,574,335,558,346,571,353,580,356,594,367,591,383,598,391,583,394,591,401,583,404,570,401,558,392,547,394]">
+                <area dataname="ninhbinh" shape="poly" coords="474,452,495,467,505,472,516,475,519,485,528,484,537,476,546,467,553,454,564,454,574,454,567,445,558,445,550,437,541,440,534,433,531,422,526,413,522,404,510,395,495,399,484,408,490,428,475,431,475,440,459,437" href="#" data-id="8" data-original-coords="474,452,495,467,505,472,516,475,519,485,528,484,537,476,546,467,553,454,564,454,574,454,567,445,558,445,550,437,541,440,534,433,531,422,526,413,522,404,510,395,495,399,484,408,490,428,475,431,475,440,459,437" data-coords="[474,452,495,467,505,472,516,475,519,485,528,484,537,476,546,467,553,454,564,454,574,454,567,445,558,445,550,437,541,440,534,433,531,422,526,413,522,404,510,395,495,399,484,408,490,428,475,431,475,440,459,437]">
+                <area dataname="quangtri" shape="poly" coords="463,731,472,730,483,724,495,721,508,721,519,733,532,736,544,736,553,731,571,733,558,743,562,760,577,785,586,798,602,811,624,828,636,838,647,859,672,880,662,892,635,900,644,910,630,927,623,931,614,924,609,907,595,913,585,915,585,897,576,892,571,883,571,849,558,849,553,838,543,826,543,811,534,814,522,808,504,792,493,776,478,767,465,745" href="#" data-id="10" data-original-coords="463,731,472,730,483,724,495,721,508,721,519,733,532,736,544,736,553,731,571,733,558,743,562,760,577,785,586,798,602,811,624,828,636,838,647,859,672,880,662,892,635,900,644,910,630,927,623,931,614,924,609,907,595,913,585,915,585,897,576,892,571,883,571,849,558,849,553,838,543,826,543,811,534,814,522,808,504,792,493,776,478,767,465,745" data-coords="[463,731,472,730,483,724,495,721,508,721,519,733,532,736,544,736,553,731,571,733,558,743,562,760,577,785,586,798,602,811,624,828,636,838,647,859,672,880,662,892,635,900,644,910,630,927,623,931,614,924,609,907,595,913,585,915,585,897,576,892,571,883,571,849,558,849,553,838,543,826,543,811,534,814,522,808,504,792,493,776,478,767,465,745]">
+                <area dataname="danang" shape="poly" coords="650,985,665,979,674,969,689,961,699,958,710,966,717,958,725,958,729,945,743,943,753,952,767,964,774,975,788,984,795,1003,811,1024,820,1032,827,1041,815,1042,795,1048,780,1051,770,1066,777,1078,765,1078,755,1092,747,1071,738,1062,726,1060,710,1051,699,1039,683,1038,677,1024,666,1029,654,1012,642,996" href="#" data-id="11" data-original-coords="650,985,665,979,674,969,689,961,699,958,710,966,717,958,725,958,729,945,743,943,753,952,767,964,774,975,788,984,795,1003,811,1024,820,1032,827,1041,815,1042,795,1048,780,1051,770,1066,777,1078,765,1078,755,1092,747,1071,738,1062,726,1060,710,1051,699,1039,683,1038,677,1024,666,1029,654,1012,642,996" data-coords="[650,985,665,979,674,969,689,961,699,958,710,966,717,958,725,958,729,945,743,943,753,952,767,964,774,975,788,984,795,1003,811,1024,820,1032,827,1041,815,1042,795,1048,780,1051,770,1066,777,1078,765,1078,755,1092,747,1071,738,1062,726,1060,710,1051,699,1039,683,1038,677,1024,666,1029,654,1012,642,996]">
+                <area dataname="quangngai" shape="poly" coords="675,1219,690,1208,701,1193,716,1181,741,1175,767,1163,782,1149,786,1134,798,1134,811,1131,817,1136,832,1128,862,1127,859,1112,848,1086,844,1071,850,1058,842,1050,836,1038,832,1047,812,1044,788,1050,773,1067,779,1077,764,1080,758,1091,749,1082,749,1073,738,1067,726,1064,716,1055,705,1046,692,1043,702,1062,689,1082,678,1086,689,1100,681,1110,686,1124,678,1157,668,1157,665,1171,660,1193,666,1205" href="#" data-id="12" data-original-coords="675,1219,690,1208,701,1193,716,1181,741,1175,767,1163,782,1149,786,1134,798,1134,811,1131,817,1136,832,1128,862,1127,859,1112,848,1086,844,1071,850,1058,842,1050,836,1038,832,1047,812,1044,788,1050,773,1067,779,1077,764,1080,758,1091,749,1082,749,1073,738,1067,726,1064,716,1055,705,1046,692,1043,702,1062,689,1082,678,1086,689,1100,681,1110,686,1124,678,1157,668,1157,665,1171,660,1193,666,1205" data-coords="[675,1219,690,1208,701,1193,716,1181,741,1175,767,1163,782,1149,786,1134,798,1134,811,1131,817,1136,832,1128,862,1127,859,1112,848,1086,844,1071,850,1058,842,1050,836,1038,832,1047,812,1044,788,1050,773,1067,779,1077,764,1080,758,1091,749,1082,749,1073,738,1067,726,1064,716,1055,705,1046,692,1043,702,1062,689,1082,678,1086,689,1100,681,1110,686,1124,678,1157,668,1157,665,1171,660,1193,666,1205]">
+                <area dataname="gialai" shape="poly" coords="677,1219,691,1207,698,1192,711,1184,727,1181,745,1172,762,1166,774,1160,781,1151,790,1134,802,1134,813,1133,828,1133,840,1127,852,1128,863,1128,867,1146,872,1164,879,1177,881,1189,887,1210,891,1222,888,1232,884,1243,872,1247,866,1258,851,1261,835,1261,838,1283,841,1302,823,1315,816,1327,804,1323,795,1315,789,1300,774,1286,754,1283,741,1282,721,1285,701,1288,686,1294,697,1270,692,1255,682,1240,676,1231" href="#" data-id="13" data-original-coords="677,1219,691,1207,698,1192,711,1184,727,1181,745,1172,762,1166,774,1160,781,1151,790,1134,802,1134,813,1133,828,1133,840,1127,852,1128,863,1128,867,1146,872,1164,879,1177,881,1189,887,1210,891,1222,888,1232,884,1243,872,1247,866,1258,851,1261,835,1261,838,1283,841,1302,823,1315,816,1327,804,1323,795,1315,789,1300,774,1286,754,1283,741,1282,721,1285,701,1288,686,1294,697,1270,692,1255,682,1240,676,1231" data-coords="[677,1219,691,1207,698,1192,711,1184,727,1181,745,1172,762,1166,774,1160,781,1151,790,1134,802,1134,813,1133,828,1133,840,1127,852,1128,863,1128,867,1146,872,1164,879,1177,881,1189,887,1210,891,1222,888,1232,884,1243,872,1247,866,1258,851,1261,835,1261,838,1283,841,1302,823,1315,816,1327,804,1323,795,1315,789,1300,774,1286,754,1283,741,1282,721,1285,701,1288,686,1294,697,1270,692,1255,682,1240,676,1231]">
+                <area dataname="khanhhoa" shape="poly" coords="811,1489,820,1481,814,1468,819,1450,820,1433,825,1424,820,1412,816,1399,819,1389,829,1386,837,1391,841,1374,848,1364,860,1358,876,1346,897,1349,885,1362,879,1374,878,1383,888,1388,896,1397,878,1394,881,1411,881,1432,881,1450,869,1466,882,1474,872,1495,861,1489,860,1519,848,1527,841,1517,832,1516,826,1504,817,1496" href="#" data-id="14" data-original-coords="811,1489,820,1481,814,1468,819,1450,820,1433,825,1424,820,1412,816,1399,819,1389,829,1386,837,1391,841,1374,848,1364,860,1358,876,1346,897,1349,885,1362,879,1374,878,1383,888,1388,896,1397,878,1394,881,1411,881,1432,881,1450,869,1466,882,1474,872,1495,861,1489,860,1519,848,1527,841,1517,832,1516,826,1504,817,1496" data-coords="[811,1489,820,1481,814,1468,819,1450,820,1433,825,1424,820,1412,816,1399,819,1389,829,1386,837,1391,841,1374,848,1364,860,1358,876,1346,897,1349,885,1362,879,1374,878,1383,888,1388,896,1397,878,1394,881,1411,881,1432,881,1450,869,1466,882,1474,872,1495,861,1489,860,1519,848,1527,841,1517,832,1516,826,1504,817,1496]">
+                <area dataname="lamdong" shape="poly" coords="650,1411,652,1431,655,1443,667,1455,671,1473,661,1482,659,1497,671,1497,679,1506,677,1515,694,1521,685,1539,676,1561,683,1564,692,1582,685,1595,691,1615,711,1606,729,1598,739,1598,744,1577,765,1571,775,1576,781,1564,795,1558,799,1545,819,1541,828,1530,845,1526,840,1517,829,1517,823,1505,811,1497,810,1485,819,1478,814,1466,819,1446,819,1428,819,1411,808,1413,793,1414,780,1417,766,1428,756,1425,744,1410,732,1398,741,1389,727,1378,720,1359,686,1362,688,1389,682,1407,674,1414,661,1405" href="#" data-id="15" data-original-coords="650,1411,652,1431,655,1443,667,1455,671,1473,661,1482,659,1497,671,1497,679,1506,677,1515,694,1521,685,1539,676,1561,683,1564,692,1582,685,1595,691,1615,711,1606,729,1598,739,1598,744,1577,765,1571,775,1576,781,1564,795,1558,799,1545,819,1541,828,1530,845,1526,840,1517,829,1517,823,1505,811,1497,810,1485,819,1478,814,1466,819,1446,819,1428,819,1411,808,1413,793,1414,780,1417,766,1428,756,1425,744,1410,732,1398,741,1389,727,1378,720,1359,686,1362,688,1389,682,1407,674,1414,661,1405" data-coords="[650,1411,652,1431,655,1443,667,1455,671,1473,661,1482,659,1497,671,1497,679,1506,677,1515,694,1521,685,1539,676,1561,683,1564,692,1582,685,1595,691,1615,711,1606,729,1598,739,1598,744,1577,765,1571,775,1576,781,1564,795,1558,799,1545,819,1541,828,1530,845,1526,840,1517,829,1517,823,1505,811,1497,810,1485,819,1478,814,1466,819,1446,819,1428,819,1411,808,1413,793,1414,780,1417,766,1428,756,1425,744,1410,732,1398,741,1389,727,1378,720,1359,686,1362,688,1389,682,1407,674,1414,661,1405]">
+                <area dataname="daklak" shape="poly" coords="834,1263,834,1276,840,1300,828,1312,817,1329,796,1320,790,1306,777,1290,751,1281,732,1287,711,1287,689,1294,677,1323,683,1344,686,1359,723,1359,726,1376,741,1388,733,1406,747,1412,754,1425,765,1428,774,1418,786,1416,799,1412,817,1412,816,1397,817,1388,835,1391,843,1371,863,1358,878,1346,897,1346,909,1344,906,1332,890,1312,891,1297,881,1281,890,1269,882,1245,870,1252,861,1258,845,1261" href="#" data-id="16" data-original-coords="834,1263,834,1276,840,1300,828,1312,817,1329,796,1320,790,1306,777,1290,751,1281,732,1287,711,1287,689,1294,677,1323,683,1344,686,1359,723,1359,726,1376,741,1388,733,1406,747,1412,754,1425,765,1428,774,1418,786,1416,799,1412,817,1412,816,1397,817,1388,835,1391,843,1371,863,1358,878,1346,897,1346,909,1344,906,1332,890,1312,891,1297,881,1281,890,1269,882,1245,870,1252,861,1258,845,1261" data-coords="[834,1263,834,1276,840,1300,828,1312,817,1329,796,1320,790,1306,777,1290,751,1281,732,1287,711,1287,689,1294,677,1323,683,1344,686,1359,723,1359,726,1376,741,1388,733,1406,747,1412,754,1425,765,1428,774,1418,786,1416,799,1412,817,1412,816,1397,817,1388,835,1391,843,1371,863,1358,878,1346,897,1346,909,1344,906,1332,890,1312,891,1297,881,1281,890,1269,882,1245,870,1252,861,1258,845,1261]">
+                <area dataname="hochiminh" shape="poly" coords="551,1566,555,1559,560,1550,551,1538,548,1522,554,1509,562,1500,568,1507,581,1515,580,1527,589,1522,596,1530,620,1531,617,1542,620,1550,610,1560,599,1562,601,1572,611,1590,595,1593,601,1602,613,1607,619,1614,628,1608,638,1605,643,1598,656,1593,659,1602,668,1599,679,1589,685,1595,691,1613,680,1620,665,1625,655,1637,646,1632,635,1641,640,1623,629,1625,617,1625,622,1634,613,1637,601,1629,599,1610,590,1601,577,1602,568,1595,572,1581,563,1571" href="#" data-id="17" data-original-coords="551,1566,555,1559,560,1550,551,1538,548,1522,554,1509,562,1500,568,1507,581,1515,580,1527,589,1522,596,1530,620,1531,617,1542,620,1550,610,1560,599,1562,601,1572,611,1590,595,1593,601,1602,613,1607,619,1614,628,1608,638,1605,643,1598,656,1593,659,1602,668,1599,679,1589,685,1595,691,1613,680,1620,665,1625,655,1637,646,1632,635,1641,640,1623,629,1625,617,1625,622,1634,613,1637,601,1629,599,1610,590,1601,577,1602,568,1595,572,1581,563,1571" data-coords="[551,1566,555,1559,560,1550,551,1538,548,1522,554,1509,562,1500,568,1507,581,1515,580,1527,589,1522,596,1530,620,1531,617,1542,620,1550,610,1560,599,1562,601,1572,611,1590,595,1593,601,1602,613,1607,619,1614,628,1608,638,1605,643,1598,656,1593,659,1602,668,1599,679,1589,685,1595,691,1613,680,1620,665,1625,655,1637,646,1632,635,1641,640,1623,629,1625,617,1625,622,1634,613,1637,601,1629,599,1610,590,1601,577,1602,568,1595,572,1581,563,1571]">
+                <area dataname="dongnai" shape="poly" coords="652,1411,652,1433,655,1448,665,1456,671,1474,659,1481,655,1490,662,1498,670,1501,677,1511,694,1522,674,1563,688,1566,692,1581,685,1593,677,1587,667,1600,658,1593,646,1593,637,1602,619,1614,613,1603,596,1599,611,1591,607,1579,601,1563,610,1561,623,1554,617,1539,620,1528,601,1524,590,1522,581,1527,580,1514,563,1501,565,1490,554,1474,558,1463,554,1448,568,1450,587,1450,598,1439,617,1438,635,1418" href="#" data-id="18" data-original-coords="652,1411,652,1433,655,1448,665,1456,671,1474,659,1481,655,1490,662,1498,670,1501,677,1511,694,1522,674,1563,688,1566,692,1581,685,1593,677,1587,667,1600,658,1593,646,1593,637,1602,619,1614,613,1603,596,1599,611,1591,607,1579,601,1563,610,1561,623,1554,617,1539,620,1528,601,1524,590,1522,581,1527,580,1514,563,1501,565,1490,554,1474,558,1463,554,1448,568,1450,587,1450,598,1439,617,1438,635,1418" data-coords="[652,1411,652,1433,655,1448,665,1456,671,1474,659,1481,655,1490,662,1498,670,1501,677,1511,694,1522,674,1563,688,1566,692,1581,685,1593,677,1587,667,1600,658,1593,646,1593,637,1602,619,1614,613,1603,596,1599,611,1591,607,1579,601,1563,610,1561,623,1554,617,1539,620,1528,601,1524,590,1522,581,1527,580,1514,563,1501,565,1490,554,1474,558,1463,554,1448,568,1450,587,1450,598,1439,617,1438,635,1418]">
+                <area dataname="tayninh" shape="poly" coords="455,1572,477,1596,492,1610,504,1617,518,1617,528,1611,542,1611,549,1623,558,1625,562,1632,572,1632,581,1626,593,1620,592,1605,575,1604,566,1596,569,1581,563,1571,549,1565,558,1551,548,1534,548,1518,562,1501,562,1486,540,1485,524,1477,510,1473,501,1489,485,1492,492,1512,489,1528,506,1542,518,1559,530,1565,521,1569,530,1592,512,1589,501,1575,495,1584,480,1565,464,1569" href="#" data-id="19" data-original-coords="455,1572,477,1596,492,1610,504,1617,518,1617,528,1611,542,1611,549,1623,558,1625,562,1632,572,1632,581,1626,593,1620,592,1605,575,1604,566,1596,569,1581,563,1571,549,1565,558,1551,548,1534,548,1518,562,1501,562,1486,540,1485,524,1477,510,1473,501,1489,485,1492,492,1512,489,1528,506,1542,518,1559,530,1565,521,1569,530,1592,512,1589,501,1575,495,1584,480,1565,464,1569" data-coords="[455,1572,477,1596,492,1610,504,1617,518,1617,528,1611,542,1611,549,1623,558,1625,562,1632,572,1632,581,1626,593,1620,592,1605,575,1604,566,1596,569,1581,563,1571,549,1565,558,1551,548,1534,548,1518,562,1501,562,1486,540,1485,524,1477,510,1473,501,1489,485,1492,492,1512,489,1528,506,1542,518,1559,530,1565,521,1569,530,1592,512,1589,501,1575,495,1584,480,1565,464,1569]">
+                <area dataname="cantho" shape="poly" coords="440,1711,450,1703,455,1691,444,1678,420,1659,428,1649,434,1655,446,1652,458,1631,471,1635,483,1644,500,1658,489,1666,479,1659,473,1667,491,1682,497,1696,516,1712,530,1736,530,1753,513,1759,491,1769,489,1754,479,1751,462,1751,461,1726,440,1729,434,1718" href="#" data-id="20" data-original-coords="440,1711,450,1703,455,1691,444,1678,420,1659,428,1649,434,1655,446,1652,458,1631,471,1635,483,1644,500,1658,489,1666,479,1659,473,1667,491,1682,497,1696,516,1712,530,1736,530,1753,513,1759,491,1769,489,1754,479,1751,462,1751,461,1726,440,1729,434,1718" data-coords="[440,1711,450,1703,455,1691,444,1678,420,1659,428,1649,434,1655,446,1652,458,1631,471,1635,483,1644,500,1658,489,1666,479,1659,473,1667,491,1682,497,1696,516,1712,530,1736,530,1753,513,1759,491,1769,489,1754,479,1751,462,1751,461,1726,440,1729,434,1718]">
+                <area dataname="vinhlong" shape="poly" coords="474,1669,489,1683,500,1687,509,1696,522,1711,537,1726,552,1734,568,1732,574,1723,575,1713,565,1704,551,1690,537,1675,522,1656,533,1665,548,1678,562,1690,572,1699,580,1704,589,1695,577,1684,589,1675,601,1669,593,1659,557,1648,548,1644,527,1645,513,1644,501,1648,492,1647,500,1657,489,1663,479,1659" href="#" data-id="21" data-original-coords="474,1669,489,1683,500,1687,509,1696,522,1711,537,1726,552,1734,568,1732,574,1723,575,1713,565,1704,551,1690,537,1675,522,1656,533,1665,548,1678,562,1690,572,1699,580,1704,589,1695,577,1684,589,1675,601,1669,593,1659,557,1648,548,1644,527,1645,513,1644,501,1648,492,1647,500,1657,489,1663,479,1659" data-coords="[474,1669,489,1683,500,1687,509,1696,522,1711,537,1726,552,1734,568,1732,574,1723,575,1713,565,1704,551,1690,537,1675,522,1656,533,1665,548,1678,562,1690,572,1699,580,1704,589,1695,577,1684,589,1675,601,1669,593,1659,557,1648,548,1644,527,1645,513,1644,501,1648,492,1647,500,1657,489,1663,479,1659]">
+                <area dataname="dongthap" shape="poly" coords="440,1614,437,1601,428,1598,422,1590,417,1576,429,1581,443,1569,455,1572,474,1596,485,1607,503,1617,516,1617,525,1611,539,1613,548,1622,558,1626,558,1635,574,1634,583,1626,595,1629,599,1647,560,1644,548,1641,534,1646,524,1649,512,1643,504,1647,494,1646,482,1644,474,1632,461,1631,453,1620" href="#" data-id="22" data-original-coords="440,1614,437,1601,428,1598,422,1590,417,1576,429,1581,443,1569,455,1572,474,1596,485,1607,503,1617,516,1617,525,1611,539,1613,548,1622,558,1626,558,1635,574,1634,583,1626,595,1629,599,1647,560,1644,548,1641,534,1646,524,1649,512,1643,504,1647,494,1646,482,1644,474,1632,461,1631,453,1620" data-coords="[440,1614,437,1601,428,1598,422,1590,417,1576,429,1581,443,1569,455,1572,474,1596,485,1607,503,1617,516,1617,525,1611,539,1613,548,1622,558,1626,558,1635,574,1634,583,1626,595,1629,599,1647,560,1644,548,1641,534,1646,524,1649,512,1643,504,1647,494,1646,482,1644,474,1632,461,1631,453,1620]">
+                <area dataname="camau" shape="poly" coords="373,1739,373,1760,372,1784,372,1798,366,1818,382,1821,378,1828,382,1836,364,1843,373,1848,385,1845,397,1843,405,1837,411,1827,422,1827,428,1815,435,1806,444,1797,452,1786,464,1781,479,1774,492,1769,491,1756,477,1754,465,1751,458,1742,458,1730,440,1729,428,1730,429,1738,428,1751,414,1745,405,1741,396,1736,387,1738" href="#" data-id="23" data-original-coords="373,1739,373,1760,372,1784,372,1798,366,1818,382,1821,378,1828,382,1836,364,1843,373,1848,385,1845,397,1843,405,1837,411,1827,422,1827,428,1815,435,1806,444,1797,452,1786,464,1781,479,1774,492,1769,491,1756,477,1754,465,1751,458,1742,458,1730,440,1729,428,1730,429,1738,428,1751,414,1745,405,1741,396,1736,387,1738" data-coords="[373,1739,373,1760,372,1784,372,1798,366,1818,382,1821,378,1828,382,1836,364,1843,373,1848,385,1845,397,1843,405,1837,411,1827,422,1827,428,1815,435,1806,444,1797,452,1786,464,1781,479,1774,492,1769,491,1756,477,1754,465,1751,458,1742,458,1730,440,1729,428,1730,429,1738,428,1751,414,1745,405,1741,396,1736,387,1738]">
+                <area dataname="angiang" shape="poly" coords="371,1739,370,1725,374,1707,377,1699,385,1701,400,1690,403,1698,400,1674,383,1669,374,1662,361,1656,352,1662,343,1651,335,1638,335,1626,344,1623,359,1621,370,1621,379,1614,388,1605,398,1600,392,1584,398,1571,413,1579,421,1594,427,1600,435,1600,436,1612,448,1621,459,1630,450,1639,447,1647,438,1651,427,1648,416,1659,427,1665,438,1678,450,1690,447,1703,433,1719,435,1730,426,1743,424,1752,415,1748,397,1736" href="#" data-id="24" data-original-coords="371,1739,370,1725,374,1707,377,1699,385,1701,400,1690,403,1698,400,1674,383,1669,374,1662,361,1656,352,1662,343,1651,335,1638,335,1626,344,1623,359,1621,370,1621,379,1614,388,1605,398,1600,392,1584,398,1571,413,1579,421,1594,427,1600,435,1600,436,1612,448,1621,459,1630,450,1639,447,1647,438,1651,427,1648,416,1659,427,1665,438,1678,450,1690,447,1703,433,1719,435,1730,426,1743,424,1752,415,1748,397,1736" data-coords="[371,1739,370,1725,374,1707,377,1699,385,1701,400,1690,403,1698,400,1674,383,1669,374,1662,361,1656,352,1662,343,1651,335,1638,335,1626,344,1623,359,1621,370,1621,379,1614,388,1605,398,1600,392,1584,398,1571,413,1579,421,1594,427,1600,435,1600,436,1612,448,1621,459,1630,450,1639,447,1647,438,1651,427,1648,416,1659,427,1665,438,1678,450,1690,447,1703,433,1719,435,1730,426,1743,424,1752,415,1748,397,1736]">
+                <area dataname="dienbien" shape="poly" coords="194,231,197,217,207,220,210,235,225,242,227,283,210,303,201,309,213,327,211,350,194,349,191,354,189,363,186,378,170,371,161,354,154,349,150,334,138,327,145,319,148,307,141,306,159,286,154,270,142,271,138,256,130,276,120,279,117,246,100,240,102,231,93,222,69,205,57,187,63,182,73,184,72,173,84,164,102,163,111,173,121,181,130,185,138,199,138,208,148,208,153,219,165,216" href="#" data-id="25" data-original-coords="194,231,197,217,207,220,210,235,225,242,227,283,210,303,201,309,213,327,211,350,194,349,191,354,189,363,186,378,170,371,161,354,154,349,150,334,138,327,145,319,148,307,141,306,159,286,154,270,142,271,138,256,130,276,120,279,117,246,100,240,102,231,93,222,69,205,57,187,63,182,73,184,72,173,84,164,102,163,111,173,121,181,130,185,138,199,138,208,148,208,153,219,165,216" data-coords="[194,231,197,217,207,220,210,235,225,242,227,283,210,303,201,309,213,327,211,350,194,349,191,354,189,363,186,378,170,371,161,354,154,349,150,334,138,327,145,319,148,307,141,306,159,286,154,270,142,271,138,256,130,276,120,279,117,246,100,240,102,231,93,222,69,205,57,187,63,182,73,184,72,173,84,164,102,163,111,173,121,181,130,185,138,199,138,208,148,208,153,219,165,216]">
+                <area dataname="caobang" shape="poly" coords="428,127,448,138,458,156,475,144,481,147,485,168,497,172,517,168,521,177,530,183,539,175,551,184,568,184,574,165,578,153,585,159,600,133,563,115,547,126,533,112,512,112,493,118,472,100,457,96" href="#" data-id="26" data-original-coords="428,127,448,138,458,156,475,144,481,147,485,168,497,172,517,168,521,177,530,183,539,175,551,184,568,184,574,165,578,153,585,159,600,133,563,115,547,126,533,112,512,112,493,118,472,100,457,96" data-coords="[428,127,448,138,458,156,475,144,481,147,485,168,497,172,517,168,521,177,530,183,539,175,551,184,568,184,574,165,578,153,585,159,600,133,563,115,547,126,533,112,512,112,493,118,472,100,457,96]">
+                <area dataname="laichau" shape="poly" coords="199,213,207,218,214,236,223,245,223,234,231,228,232,209,241,207,253,196,255,184,243,180,229,175,231,162,226,153,219,160,213,153,207,144,196,135,189,151,178,156,177,166,168,168,166,177,149,172,143,159,113,142,107,145,104,138,98,136,86,160,103,162,115,171,122,180,134,187,139,195,142,206,151,209,155,215,165,216,195,228" href="#" data-id="27" data-original-coords="199,213,207,218,214,236,223,245,223,234,231,228,232,209,241,207,253,196,255,184,243,180,229,175,231,162,226,153,219,160,213,153,207,144,196,135,189,151,178,156,177,166,168,168,166,177,149,172,143,159,113,142,107,145,104,138,98,136,86,160,103,162,115,171,122,180,134,187,139,195,142,206,151,209,155,215,165,216,195,228" data-coords="[199,213,207,218,214,236,223,245,223,234,231,228,232,209,241,207,253,196,255,184,243,180,229,175,231,162,226,153,219,160,213,153,207,144,196,135,189,151,178,156,177,166,168,168,166,177,149,172,143,159,113,142,107,145,104,138,98,136,86,160,103,162,115,171,122,180,134,187,139,195,142,206,151,209,155,215,165,216,195,228]">
+                <area dataname="langson" shape="poly" coords="529,183,541,177,553,185,568,182,572,191,583,192,586,206,582,211,586,223,582,235,589,241,591,232,606,236,616,244,627,241,622,251,631,259,643,266,652,268,664,280,651,290,654,301,636,316,624,304,616,301,607,283,595,287,575,281,565,292,559,302,548,302,536,296,529,283,541,271,527,259,521,227,533,215,539,200" href="#" data-id="28" data-original-coords="529,183,541,177,553,185,568,182,572,191,583,192,586,206,582,211,586,223,582,235,589,241,591,232,606,236,616,244,627,241,622,251,631,259,643,266,652,268,664,280,651,290,654,301,636,316,624,304,616,301,607,283,595,287,575,281,565,292,559,302,548,302,536,296,529,283,541,271,527,259,521,227,533,215,539,200" data-coords="[529,183,541,177,553,185,568,182,572,191,583,192,586,206,582,211,586,223,582,235,589,241,591,232,606,236,616,244,627,241,622,251,631,259,643,266,652,268,664,280,651,290,654,301,636,316,624,304,616,301,607,283,595,287,575,281,565,292,559,302,548,302,536,296,529,283,541,271,527,259,521,227,533,215,539,200]">
+                <area dataname="sonla" shape="poly" coords="217,391,231,390,237,400,244,400,240,391,250,388,250,376,277,369,282,361,297,364,302,372,312,370,320,385,329,388,347,400,359,408,372,408,375,393,387,390,398,387,402,379,377,355,383,346,378,334,371,316,362,308,348,304,333,313,323,308,314,299,318,277,311,269,300,274,279,274,255,265,243,247,237,235,223,233,226,280,204,308,214,328,210,349,196,349,187,378,202,385,211,379" href="#" data-id="29" data-original-coords="217,391,231,390,237,400,244,400,240,391,250,388,250,376,277,369,282,361,297,364,302,372,312,370,320,385,329,388,347,400,359,408,372,408,375,393,387,390,398,387,402,379,377,355,383,346,378,334,371,316,362,308,348,304,333,313,323,308,314,299,318,277,311,269,300,274,279,274,255,265,243,247,237,235,223,233,226,280,204,308,214,328,210,349,196,349,187,378,202,385,211,379" data-coords="[217,391,231,390,237,400,244,400,240,391,250,388,250,376,277,369,282,361,297,364,302,372,312,370,320,385,329,388,347,400,359,408,372,408,375,393,387,390,398,387,402,379,377,355,383,346,378,334,371,316,362,308,348,304,333,313,323,308,314,299,318,277,311,269,300,274,279,274,255,265,243,247,237,235,223,233,226,280,204,308,214,328,210,349,196,349,187,378,202,385,211,379]">
+                <area dataname="hanoi" shape="poly" coords="434,327,440,318,445,332,461,336,472,338,479,345,484,333,481,314,491,314,499,318,502,326,500,338,505,348,512,357,497,362,500,371,499,382,512,394,488,400,484,410,472,401,463,386,452,377,454,362,443,354,429,356,423,348,432,342,426,340" href="#" data-id="30" data-original-coords="434,327,440,318,445,332,461,336,472,338,479,345,484,333,481,314,491,314,499,318,502,326,500,338,505,348,512,357,497,362,500,371,499,382,512,394,488,400,484,410,472,401,463,386,452,377,454,362,443,354,429,356,423,348,432,342,426,340" data-coords="[434,327,440,318,445,332,461,336,472,338,479,345,484,333,481,314,491,314,499,318,502,326,500,338,505,348,512,357,497,362,500,371,499,382,512,394,488,400,484,410,472,401,463,386,452,377,454,362,443,354,429,356,423,348,432,342,426,340]">
+                <area dataname="quangninh" shape="poly" coords="621,329,624,317,652,305,651,289,663,281,673,278,675,284,702,281,708,275,720,278,737,293,738,308,693,353,679,379,630,393,607,382,598,373,595,363,585,356,560,349,571,334,604,340" href="#" data-id="31" data-original-coords="621,329,624,317,652,305,651,289,663,281,673,278,675,284,702,281,708,275,720,278,737,293,738,308,693,353,679,379,630,393,607,382,598,373,595,363,585,356,560,349,571,334,604,340" data-coords="[621,329,624,317,652,305,651,289,663,281,673,278,675,284,702,281,708,275,720,278,737,293,738,308,693,353,679,379,630,393,607,382,598,373,595,363,585,356,560,349,571,334,604,340]">
+                <area dataname="thanhhoa" shape="poly" coords="348,402,362,408,374,405,396,411,405,408,425,424,452,436,514,472,514,481,503,490,500,507,490,525,487,546,482,554,485,570,470,566,454,546,440,545,432,537,422,539,425,530,408,508,414,493,387,483,390,468,383,468,384,457,371,454,354,456,356,438,344,432,321,429,326,417,339,418" href="#" data-id="32" data-original-coords="348,402,362,408,374,405,396,411,405,408,425,424,452,436,514,472,514,481,503,490,500,507,490,525,487,546,482,554,485,570,470,566,454,546,440,545,432,537,422,539,425,530,408,508,414,493,387,483,390,468,383,468,384,457,371,454,354,456,356,438,344,432,321,429,326,417,339,418" data-coords="[348,402,362,408,374,405,396,411,405,408,425,424,452,436,514,472,514,481,503,490,500,507,490,525,487,546,482,554,485,570,470,566,454,546,440,545,432,537,422,539,425,530,408,508,414,493,387,483,390,468,383,468,384,457,371,454,354,456,356,438,344,432,321,429,326,417,339,418]">
+                <area dataname="nghean" shape="poly" coords="372,507,365,496,375,484,389,485,414,494,410,507,426,532,426,541,435,539,441,547,454,547,472,568,488,571,482,578,482,593,469,598,469,611,478,623,487,644,475,650,475,659,454,655,445,655,426,653,416,653,410,643,389,638,362,632,341,613,329,607,311,592,286,578,279,580,262,568,274,557,286,556,289,547,289,536,277,524,292,523,308,519,320,522,332,527,347,528,353,519" href="#" data-id="33" data-original-coords="372,507,365,496,375,484,389,485,414,494,410,507,426,532,426,541,435,539,441,547,454,547,472,568,488,571,482,578,482,593,469,598,469,611,478,623,487,644,475,650,475,659,454,655,445,655,426,653,416,653,410,643,389,638,362,632,341,613,329,607,311,592,286,578,279,580,262,568,274,557,286,556,289,547,289,536,277,524,292,523,308,519,320,522,332,527,347,528,353,519" data-coords="[372,507,365,496,375,484,389,485,414,494,410,507,426,532,426,541,435,539,441,547,454,547,472,568,488,571,482,578,482,593,469,598,469,611,478,623,487,644,475,650,475,659,454,655,445,655,426,653,416,653,410,643,389,638,362,632,341,613,329,607,311,592,286,578,279,580,262,568,274,557,286,556,289,547,289,536,277,524,292,523,308,519,320,522,332,527,347,528,353,519]">
+                <area dataname="hue"shape="poly" coords="643,911,637,899,657,895,672,878,696,896,675,889,700,902,718,922,715,928,728,934,735,925,737,929,744,926,750,937,761,943,737,940,725,955,720,955,711,965,702,955,696,961,675,962,661,959,643,949,637,938,631,926" href="#" data-id="35" data-original-coords="643,911,637,899,657,895,672,878,696,896,675,889,700,902,718,922,715,928,728,934,735,925,737,929,744,926,750,937,761,943,737,940,725,955,720,955,711,965,702,955,696,961,675,962,661,959,643,949,637,938,631,926" data-coords="[643,911,637,899,657,895,672,878,696,896,675,889,700,902,718,922,715,928,728,934,735,925,737,929,744,926,750,937,761,943,737,940,725,955,720,955,711,965,702,955,696,961,675,962,661,959,643,949,637,938,631,926]">
+                <area dataname="hatinh"shape="poly" coords="408,651,402,669,411,680,419,693,426,695,426,704,434,707,445,702,464,732,487,722,509,720,518,734,542,737,547,729,566,731,560,722,559,713,548,716,544,707,529,693,520,696,485,645,469,657" href="#" data-id="34" data-original-coords="408,651,402,669,411,680,419,693,426,695,426,704,434,707,445,702,464,732,487,722,509,720,518,734,542,737,547,729,566,731,560,722,559,713,548,716,544,707,529,693,520,696,485,645,469,657" data-coords="[408,651,402,669,411,680,419,693,426,695,426,704,434,707,445,702,464,732,487,722,509,720,518,734,542,737,547,729,566,731,560,722,559,713,548,716,544,707,529,693,520,696,485,645,469,657]">
+            </map>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="info-panel">
+                <div class="card now-playing">
+                    <div class="playing-label">Đang phát</div>
+                    <div id="playingProvinceName">Chưa chọn tỉnh</div>
+                    <div id="playingStatusText">Click vào một tỉnh trên bản đồ để bắt đầu nghe âm thanh.</div>
+                </div>
+
+                <div class="card">
+                    <h3>Thông tin tỉnh đang chọn</h3>
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-label">Tỉnh / thành phố</div>
+                            <div class="detail-value" id="detailName">—</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Trạng thái</div>
+                            <div class="detail-value" id="detailStatus">—</div>
+                        </div>
+                        <div class="detail-box full">
+                            <div class="detail-label">Thông tin sáp nhập</div>
+                            <div class="detail-value" id="detailMerge">—</div>
+                        </div>
+                        <div class="detail-box full">
+                            <div class="detail-label">Trung tâm hành chính</div>
+                            <div class="detail-value" id="detailCenter">—</div>
+                        </div>
+                    </div>
+
+                    <div class="audio-buttons">
+                        <button id="stopBtn">Dừng</button>
+                        <button id="testBtn">Test</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Danh sách tỉnh / thành</h3>
+                    <p class="muted">Bấm vào tên tỉnh ở đây cũng sẽ phát âm thanh tương tự như click trên bản đồ.</p>
+                    <div class="province-list" id="provinceList"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        window.PROVINCE_DATA = {"tuyenquang": {"name": "Tuyên Quang", "merge": "Tuyên Quang + Hà Giang", "center": "Tuyên Quang", "stt": 1, "status": "Sau sáp nhập"}, "laocai": {"name": "Lào Cai", "merge": "Lào Cai + Yên Bái", "center": "Yên Bái", "stt": 2, "status": "Sau sáp nhập"}, "thainguyen": {"name": "Thái Nguyên", "merge": "Thái Nguyên + Bắc Kạn", "center": "Thái Nguyên", "stt": 3, "status": "Sau sáp nhập"}, "phutho": {"name": "Phú Thọ", "merge": "Phú Thọ + Vĩnh Phúc + Hòa Bình", "center": "Phú Thọ", "stt": 4, "status": "Sau sáp nhập"}, "bacninh": {"name": "Bắc Ninh", "merge": "Bắc Ninh + Bắc Giang", "center": "Bắc Giang", "stt": 5, "status": "Sau sáp nhập"}, "hungyen": {"name": "Hưng Yên", "merge": "Hưng Yên + Thái Bình", "center": "Hưng Yên", "stt": 6, "status": "Sau sáp nhập"}, "haiphong": {"name": "TP Hải Phòng", "merge": "TP Hải Phòng + Hải Dương", "center": "TP Hải Phòng", "stt": 7, "status": "Sau sáp nhập"}, "ninhbinh": {"name": "Ninh Bình", "merge": "Hà Nam + Nam Định + Ninh Bình", "center": "Ninh Bình", "stt": 8, "status": "Sau sáp nhập"}, "quangtri": {"name": "Quảng Trị", "merge": "Quảng Bình + Quảng Trị", "center": "Quảng Bình", "stt": 9, "status": "Sau sáp nhập"}, "danang": {"name": "TP Đà Nẵng", "merge": "TP Đà Nẵng + Quảng Nam", "center": "TP Đà Nẵng", "stt": 10, "status": "Sau sáp nhập"}, "quangngai": {"name": "Quảng Ngãi", "merge": "Kon Tum + Quảng Ngãi", "center": "Quảng Ngãi", "stt": 11, "status": "Sau sáp nhập"}, "gialai": {"name": "Gia Lai", "merge": "Gia Lai + Bình Định", "center": "Bình Định", "stt": 12, "status": "Sau sáp nhập"}, "khanhhoa": {"name": "Khánh Hòa", "merge": "Khánh Hòa + Ninh Thuận", "center": "Khánh Hòa", "stt": 13, "status": "Sau sáp nhập"}, "lamdong": {"name": "Lâm Đồng", "merge": "Đắk Nông + Lâm Đồng + Bình Thuận", "center": "Lâm Đồng", "stt": 14, "status": "Sau sáp nhập"}, "daklak": {"name": "Đắk Lắk", "merge": "Đắk Lắk + Phú Yên", "center": "Đắk Lắk", "stt": 15, "status": "Sau sáp nhập"}, "hochiminh": {"name": "TP Hồ Chí Minh", "merge": "TP Hồ Chí Minh + Bình Dương + Bà Rịa - Vũng Tàu", "center": "TP Hồ Chí Minh", "stt": 16, "status": "Sau sáp nhập"}, "dongnai": {"name": "Đồng Nai", "merge": "Bình Phước + Đồng Nai", "center": "Đồng Nai", "stt": 17, "status": "Sau sáp nhập"}, "tayninh": {"name": "Tây Ninh", "merge": "Tây Ninh + Long An", "center": "Long An", "stt": 18, "status": "Sau sáp nhập"}, "cantho": {"name": "TP Cần Thơ", "merge": "TP Cần Thơ + Hậu Giang + Sóc Trăng", "center": "TP Cần Thơ", "stt": 19, "status": "Sau sáp nhập"}, "vinhlong": {"name": "Vĩnh Long", "merge": "Vĩnh Long + Trà Vinh + Bến Tre", "center": "Vĩnh Long", "stt": 20, "status": "Sau sáp nhập"}, "dongthap": {"name": "Đồng Tháp", "merge": "Đồng Tháp + Tiền Giang", "center": "Tiền Giang", "stt": 21, "status": "Sau sáp nhập"}, "camau": {"name": "Cà Mau", "merge": "Bạc Liêu + Cà Mau", "center": "Cà Mau", "stt": 22, "status": "Sau sáp nhập"}, "angiang": {"name": "An Giang", "merge": "Kiên Giang + An Giang", "center": "Kiên Giang", "stt": 23, "status": "Sau sáp nhập"}, "dienbien": {"name": "Điện Biên", "merge": "Giữ nguyên", "center": "Điện Biên", "stt": 24, "status": "Giữ nguyên"}, "caobang": {"name": "Cao Bằng", "merge": "Giữ nguyên", "center": "Cao Bằng", "stt": 25, "status": "Giữ nguyên"}, "laichau": {"name": "Lai Châu", "merge": "Giữ nguyên", "center": "Lai Châu", "stt": 26, "status": "Giữ nguyên"}, "langson": {"name": "Lạng Sơn", "merge": "Giữ nguyên", "center": "Lạng Sơn", "stt": 27, "status": "Giữ nguyên"}, "sonla": {"name": "Sơn La", "merge": "Giữ nguyên", "center": "Sơn La", "stt": 28, "status": "Giữ nguyên"}, "hanoi": {"name": "TP Hà Nội", "merge": "Giữ nguyên", "center": "TP Hà Nội", "stt": 29, "status": "Giữ nguyên"}, "quangninh": {"name": "Quảng Ninh", "merge": "Giữ nguyên", "center": "Quảng Ninh", "stt": 30, "status": "Giữ nguyên"}, "thanhhoa": {"name": "Thanh Hóa", "merge": "Giữ nguyên", "center": "Thanh Hóa", "stt": 31, "status": "Giữ nguyên"}, "nghean": {"name": "Nghệ An", "merge": "Giữ nguyên", "center": "Nghệ An", "stt": 32, "status": "Giữ nguyên"}, "hue": {"name": "TP Huế", "merge": "Giữ nguyên", "center": "TP Huế", "stt": 33, "status": "Giữ nguyên"}, "hatinh": {"name": "Hà Tĩnh", "merge": "Giữ nguyên", "center": "Hà Tĩnh", "stt": 34, "status": "Giữ nguyên"}};
+    </script>
+</body>
+</html>
